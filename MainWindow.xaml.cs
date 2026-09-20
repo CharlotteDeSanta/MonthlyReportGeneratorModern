@@ -49,7 +49,12 @@ namespace MonthlyReportGeneratorModern
                 titleBar.ButtonBackgroundColor = Colors.Transparent;
                 titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             }
-            try { AppWindow.SetIcon(@"Assets\app.ico"); } catch { /* 图标设置失败不影响运行 */ }
+            try
+            {
+                // 打包运行时工作目录不可靠，用程序所在目录拼接绝对路径
+                AppWindow.SetIcon(System.IO.Path.Combine(AppContext.BaseDirectory, @"Assets\app.ico"));
+            }
+            catch { /* 图标设置失败不影响运行 */ }
 
             Closed += (_, _) => _vm.Shutdown();
 
