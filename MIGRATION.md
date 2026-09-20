@@ -162,6 +162,7 @@
 - **坑 11（新增）**：WinUI 3 `Window` 无 `Resources`/`Loaded`（资源放根 Grid，初始化用 `Activated`+一次性标志）；`DataGridSelectionMode` 无 `None`（用 IsReadOnly 代替）；XAML 报 WMC0001“Unknown type”往往是本地 C# 编译失败（如 CS0103）的连锁反应，先修 C# 错误。
 - **坑 12（严重，实测踩中）**：**WinUI 3 的 `ElementName` 绑定不可靠**——用于视图 DataContext/Visibility 时绑定静默失败（Visibility 保持默认 Visible → 三个常驻页面全部叠在一起显示；DataContext 为 null → 下拉无选项）。**禁止用 ElementName 跨元素传 DataContext/Visibility**：改由代码隐藏管理（`_vm.PropertyChanged` 同步视图 DataContext + 显式切换 Visibility）；DataGrid 模板列内也禁止 ElementName 取外层 DataContext（实测下拉空选项），选项列表改用 `StaticResource` + `{Binding ..., Source=...}`（见 `ViewModels\TimeOptions.cs`）。
 - **坑 13（新增）**：重写 MainWindow 时勿丢初始窗口尺寸——WinUI 3 模板默认小窗口会导致各区域挤压重叠；已用 `AppWindow.MoveAndResize`（1280×880 按工作区钳制居中）恢复 WPF 版行为。
+- **坑 14（新增）**：DataGrid 虚拟化会回收行容器，`LoadingRow` 里给休息日设红底时，**非休息日分支必须显式把 Background/BorderBrush 清空（置 null）**，否则红底残留在无关日期（尤其 ItemsSource 重建/滚动后大片错红）。
 - **运行冒烟（已完成）**：`-p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true` 未打包构建后实际启动应用，20 秒无崩溃（无 XAML 运行时错误）。窗口壳/三页 DataGrid/标题栏均正常实例化。
 - **待用户交互验证（移植代码已完成，剩余为人工验收）**：① F5 或打包安装后对照 §3.2–3.5 逐条验收三页功能；② Spike 交互细节实测：DataGrid 单击进编辑、时间列单击即展开下拉、× 清空、焦点预填 09:00/17:00（`PointerPressed` 方案若单击不生效，退化为双击编辑）；③ 低配机（i5-8265U）性能验证；④ 导出 XLSX 与 WPF 版逐格对照（数值已由 ExportSmokeTest 保证）；⑤ §10 商店发布流程（VS 关联商店→素材→打包）。
 
