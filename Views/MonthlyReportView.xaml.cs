@@ -49,7 +49,7 @@ namespace MonthlyReportGeneratorModern.Views
         /// <summary>
         /// 休息日行红底（周末/法定节假日且非补班日）。
         /// 注意：DataGrid 虚拟化会回收行容器，非休息日必须显式清除背景，
-        /// 否则红底会残留在无关日期上。
+        /// 否则红底会残留在无关日期上；时间下拉同样要在行加载后复位选中值。
         /// </summary>
         private void OnGridLoadingRow(object sender, DataGridRowEventArgs e)
         {
@@ -62,6 +62,51 @@ namespace MonthlyReportGeneratorModern.Views
             {
                 e.Row.Background = null;
                 e.Row.BorderBrush = null;
+            }
+
+            if (e.Row.DataContext is DailyEntry entry)
+                FixTimeCombos(e.Row, entry);
+        }
+
+        /// <summary>
+        /// 行容器回收后，把该行时间下拉的选中值复位为条目当前值（空→null，显示空白）。
+        /// 延迟到布局完成后执行（此时单元格模板已实例化）；若期间行又被回收则跳过。
+        /// </summary>
+        private void FixTimeCombos(DataGridRow row, DailyEntry entry)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (row.DataContext is not DailyEntry current || !ReferenceEquals(current, entry))
+                    return; // 行已被回收给其他条目，由对应 LoadingRow 处理
+
+                foreach (var combo in FindDescendants<ComboBox>(row))
+                {
+                    if (combo.Tag is not string tag) continue;
+                    var parts = tag.Split(':');
+                    if (parts.Length != 2) continue;
+
+                    var value = (parts[0], parts[1]) switch
+                    {
+                        ("start", "h") => entry.StartHour,
+                        ("start", "m") => entry.StartMinute,
+                        ("end", "h") => entry.EndHour,
+                        ("end", "m") => entry.EndMinute,
+                        _ => null,
+                    };
+                    if (value is not null)
+                        combo.SelectedItem = value.Length == 0 ? null : value;
+                }
+            });
+        }
+
+        private static IEnumerable<T> FindDescendants<T>(DependencyObject root) where T : DependencyObject
+        {
+            var count = VisualTreeHelper.GetChildrenCount(root);
+            for (var i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(root, i);
+                if (child is T match) yield return match;
+                foreach (var descendant in FindDescendants<T>(child)) yield return descendant;
             }
         }
 
@@ -77,8 +122,8 @@ namespace MonthlyReportGeneratorModern.Views
         }
 
         /// <summary>
-        /// 时间下拉获得焦点且当前时间未填写时，自动预填默认时间（上班 09:00 / 下班 17:00），
-        /// 与原网页版 input[type=time] 的 focus 行为一致。Tag 形如 "start:09" / "end:17"。
+        /// 小时下拉获得焦点且当前时间未填写时，自动预填默认小时（上班 09 / 下班 17），
+        /// 与原网页版 input[type=time] 的 focus 行为一致。Tag 形如 "start:h" / "end:h"。
         /// </summary>
         private void OnTimeComboFocus(object sender, RoutedEventArgs e)
         {
@@ -88,15 +133,16 @@ namespace MonthlyReportGeneratorModern.Views
                 return;
 
             var parts = tag.Split(':');
-            if (parts.Length != 2) return;
+            if (parts.Length != 2 || parts[1] != "h") return; // 仅小时下拉预填
 
+            var defaultHour = parts[0] == "start" ? "09" : "17";
             if (parts[0] == "start")
             {
-                if (entry.StartTimeText.Length == 0) entry.StartHour = parts[1];
+                if (entry.StartTimeText.Length == 0) entry.StartHour = defaultHour;
             }
             else
             {
-                if (entry.EndTimeText.Length == 0) entry.EndHour = parts[1];
+                if (entry.EndTimeText.Length == 0) entry.EndHour = defaultHour;
             }
         }
 

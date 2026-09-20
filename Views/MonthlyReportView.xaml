@@ -76,12 +76,12 @@
                 <controls:DataGridTemplateColumn Header="上班时间" Width="212">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <ComboBox Width="78" Tag="start:09" GotFocus="OnTimeComboFocus"
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ComboBox Width="78" Tag="start:h" GotFocus="OnTimeComboFocus" VerticalAlignment="Center"
                                           ItemsSource="{Binding Hours, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding StartHour, Mode=TwoWay}" />
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="4,0" />
-                                <ComboBox Width="78" Tag="start:09" GotFocus="OnTimeComboFocus"
+                                <ComboBox Width="78" Tag="start:m" GotFocus="OnTimeComboFocus" VerticalAlignment="Center"
                                           ItemsSource="{Binding Minutes, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding StartMinute, Mode=TwoWay}" />
                                 <Button Content="×" Width="26" Height="26" Margin="4,0,0,0" Padding="0"
@@ -94,12 +94,12 @@
                 <controls:DataGridTemplateColumn Header="下班时间" Width="212">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <ComboBox Width="78" Tag="end:17" GotFocus="OnTimeComboFocus"
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ComboBox Width="78" Tag="end:h" GotFocus="OnTimeComboFocus" VerticalAlignment="Center"
                                           ItemsSource="{Binding Hours, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding EndHour, Mode=TwoWay}" />
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="4,0" />
-                                <ComboBox Width="78" Tag="end:17" GotFocus="OnTimeComboFocus"
+                                <ComboBox Width="78" Tag="end:m" GotFocus="OnTimeComboFocus" VerticalAlignment="Center"
                                           ItemsSource="{Binding Minutes, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding EndMinute, Mode=TwoWay}" />
                                 <Button Content="×" Width="26" Height="26" Margin="4,0,0,0" Padding="0"
