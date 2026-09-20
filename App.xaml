@@ -28,6 +28,8 @@
                     <Color x:Key="DataGridColumnHeaderPressedBackgroundColor">#E0E0E0</Color>
                     <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="#0F6CBD" />
                     <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="#FFFFFF" />
+                    <!-- 文本框聚焦边框：WinUI 3 默认纯黑，改为主题蓝 -->
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#0F6CBD" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <Color x:Key="DataGridRowHoveredBackgroundColor">#3D3D3D</Color>
@@ -43,6 +45,8 @@
                     <Color x:Key="DataGridColumnHeaderPressedBackgroundColor">#2E2E2E</Color>
                     <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="#60CDFF" />
                     <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="#FF1F1F1F" />
+                    <!-- 文本框聚焦边框：WinUI 3 暗色主题默认纯白，改为暗色主题强调蓝 -->
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#60CDFF" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
