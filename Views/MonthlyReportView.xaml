@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="MonthlyReportGeneratorModern.Views.MonthlyReportView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:vm="using:MonthlyReportGenerator.ViewModels">
+
+    <UserControl.Resources>
+        <vm:ValueFormatConverter x:Key="Fmt" />
+    </UserControl.Resources>
+
+    <Grid x:Name="Root" Loaded="OnLoaded" Unloaded="OnUnloaded">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 元信息区（姓名/等级在窗口公共区） -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8" Spacing="6">
+            <TextBlock Text="年份" VerticalAlignment="Center" />
+            <ComboBox Width="90" ItemsSource="{Binding Years}" SelectedItem="{Binding Year, Mode=TwoWay}" />
+            <TextBlock Text="月份" VerticalAlignment="Center" Margin="6,0,0,0" />
+            <ComboBox Width="64" ItemsSource="{Binding Months}" SelectedItem="{Binding Month, Mode=TwoWay}" />
+            <TextBlock Text="{Binding TitlePreview}" VerticalAlignment="Center" FontWeight="Bold" Margin="6,0,0,0" />
+        </StackPanel>
+
+        <!-- 工具栏 -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8" Spacing="8">
+            <Button Content="导出 XLSX" Style="{StaticResource AccentButtonStyle}" Command="{Binding ExportCommand}" />
+            <Button Content="清空表单" Command="{Binding ClearCommand}" />
+        </StackPanel>
+
+        <!-- 整月明细表 -->
+        <controls:DataGrid x:Name="MainGrid" Grid.Row="2"
+                           ItemsSource="{Binding Days}"
+                           AutoGenerateColumns="False"
+                           CanUserSortColumns="False"
+                           CanUserReorderColumns="False"
+                           HeadersVisibility="Column"
+                           GridLinesVisibility="All"
+                           SelectionMode="Single"
+                           RowHeight="42"
+                           PointerPressed="OnGridPointerPressed"
+                           LoadingRow="OnGridLoadingRow">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Header="日期" IsReadOnly="True" Width="110"
+                                             Binding="{Binding Date, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=yyyy-MM-dd}" />
+                <controls:DataGridTextColumn Header="星期" IsReadOnly="True" Width="60"
+                                             Binding="{Binding WeekdayText, Mode=OneWay}" />
+                <controls:DataGridTextColumn Header="上班地点" Width="140"
+                                             Binding="{Binding Location, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:DataGridTemplateColumn Header="工作内容" Width="3*">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding WorkContent, Mode=OneWay}"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       Margin="2,0" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding WorkContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="40" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Header="上班时间" Width="212">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox Width="78" Tag="start:09" GotFocus="OnTimeComboFocus"
+                                          ItemsSource="{Binding DataContext.HourOptions, ElementName=Root}"
+                                          SelectedItem="{Binding StartHour, Mode=TwoWay}" />
+                                <TextBlock Text=":" VerticalAlignment="Center" Margin="4,0" />
+                                <ComboBox Width="78" Tag="start:09" GotFocus="OnTimeComboFocus"
+                                          ItemsSource="{Binding DataContext.MinuteOptions, ElementName=Root}"
+                                          SelectedItem="{Binding StartMinute, Mode=TwoWay}" />
+                                <Button Content="×" Width="26" Height="26" Margin="4,0,0,0" Padding="0"
+                                        FontSize="14" VerticalAlignment="Center"
+                                        Tag="start" Click="OnClearTimeClick" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Header="下班时间" Width="212">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox Width="78" Tag="end:17" GotFocus="OnTimeComboFocus"
+                                          ItemsSource="{Binding DataContext.HourOptions, ElementName=Root}"
+                                          SelectedItem="{Binding EndHour, Mode=TwoWay}" />
+                                <TextBlock Text=":" VerticalAlignment="Center" Margin="4,0" />
+                                <ComboBox Width="78" Tag="end:17" GotFocus="OnTimeComboFocus"
+                                          ItemsSource="{Binding DataContext.MinuteOptions, ElementName=Root}"
+                                          SelectedItem="{Binding EndMinute, Mode=TwoWay}" />
+                                <Button Content="×" Width="26" Height="26" Margin="4,0,0,0" Padding="0"
+                                        FontSize="14" VerticalAlignment="Center"
+                                        Tag="end" Click="OnClearTimeClick" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTextColumn Header="工作时长(h)" IsReadOnly="True" Width="104"
+                                             Binding="{Binding WorkHours, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=0.00}" />
+                <controls:DataGridTextColumn Header="加班时长(h)" IsReadOnly="True" Width="104"
+                                             Binding="{Binding OvertimeHours, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=0.00}" />
+                <controls:DataGridTextColumn Header="项目出勤" IsReadOnly="True" Width="84"
+                                             Binding="{Binding ProjectAttendance, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=0.00}" />
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        <!-- 底部：统计表格 + 提示 -->
+        <StackPanel Grid.Row="3" Margin="0,8,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 月度汇总统计 -->
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="月度汇总统计" FontWeight="Bold" Margin="0,0,0,4" />
+                    <controls:DataGrid ItemsSource="{Binding SummaryRows}"
+                                       AutoGenerateColumns="False"
+                                       CanUserSortColumns="False"
+                                       IsReadOnly="True"
+                                       HeadersVisibility="Column"
+                                       GridLinesVisibility="All"
+                                       RowHeight="28"
+                                       Width="440"
+                                       MaxHeight="300">
+                        <controls:DataGrid.Columns>
+                            <controls:DataGridTextColumn Header="统计项" Width="*"
+                                                         Binding="{Binding Name, Mode=OneWay}" />
+                            <controls:DataGridTextColumn Header="数值" Width="90"
+                                                         Binding="{Binding Value, Mode=OneWay}" />
+                        </controls:DataGrid.Columns>
+                    </controls:DataGrid>
+                </StackPanel>
+
+                <!-- 项目地点汇总 -->
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="项目地点汇总" FontWeight="Bold" Margin="0,0,0,4" />
+                    <controls:DataGrid ItemsSource="{Binding LocationSummaries}"
+                                       AutoGenerateColumns="False"
+                                       CanUserSortColumns="False"
+                                       IsReadOnly="True"
+                                       HeadersVisibility="Column"
+                                       GridLinesVisibility="All"
+                                       RowHeight="28"
+                                       MaxHeight="300">
+                        <controls:DataGrid.Columns>
+                            <controls:DataGridTextColumn Header="项目地点" Width="*"
+                                                         Binding="{Binding Location, Mode=OneWay}" />
+                            <controls:DataGridTextColumn Header="出勤天数(天)" Width="110"
+                                                         Binding="{Binding AttendanceDays, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=0.0}" />
+                            <controls:DataGridTextColumn Header="加班时长(h)" Width="110"
+                                                         Binding="{Binding OvertimeHours, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=0.00}" />
+                        </controls:DataGrid.Columns>
+                    </controls:DataGrid>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="{Binding WarningText}" Foreground="#E8A33D" Margin="0,6,0,0" />
+        </StackPanel>
+    </Grid>
+</UserControl>

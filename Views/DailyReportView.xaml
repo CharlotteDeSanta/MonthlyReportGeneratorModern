@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="MonthlyReportGeneratorModern.Views.DailyReportView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:vm="using:MonthlyReportGenerator.ViewModels">
+
+    <UserControl.Resources>
+        <vm:ValueFormatConverter x:Key="Fmt" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 元信息区 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8" Spacing="6">
+            <TextBlock Text="年份" VerticalAlignment="Center" />
+            <ComboBox Width="90" ItemsSource="{Binding Years}" SelectedItem="{Binding Year, Mode=TwoWay}" />
+            <TextBlock Text="月份" VerticalAlignment="Center" Margin="6,0,0,0" />
+            <ComboBox Width="64" ItemsSource="{Binding Months}" SelectedItem="{Binding Month, Mode=TwoWay}" />
+            <TextBlock Text="实施记录日报" VerticalAlignment="Center" FontWeight="Bold" Margin="6,0,0,0" />
+        </StackPanel>
+
+        <!-- 工具栏 -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8" Spacing="8">
+            <Button Content="导出 XLSX" Style="{StaticResource AccentButtonStyle}" Command="{Binding ExportCommand}" />
+            <Button Content="清空表单" Command="{Binding ClearCommand}" />
+        </StackPanel>
+
+        <!-- 整月日报表（每天一行记录） -->
+        <controls:DataGrid x:Name="MainGrid" Grid.Row="2"
+                           ItemsSource="{Binding Days}"
+                           AutoGenerateColumns="False"
+                           CanUserSortColumns="False"
+                           CanUserReorderColumns="False"
+                           HeadersVisibility="Column"
+                           GridLinesVisibility="All"
+                           SelectionMode="Single"
+                           RowHeight="42"
+                           PointerPressed="OnGridPointerPressed"
+                           LoadingRow="OnGridLoadingRow">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Header="日期" IsReadOnly="True" Width="110"
+                                             Binding="{Binding Date, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=yyyy-MM-dd}" />
+                <controls:DataGridTextColumn Header="星期" IsReadOnly="True" Width="60"
+                                             Binding="{Binding WeekdayText, Mode=OneWay}" />
+                <controls:DataGridTemplateColumn Header="今日完成" Width="3*">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DoneToday, Mode=OneWay}"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       Margin="2,0" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding DoneToday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="40" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Header="明日计划" Width="3*">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding PlanTomorrow, Mode=OneWay}"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       Margin="2,0" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding PlanTomorrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="40" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTextColumn Header="项目技术负责人" Width="120"
+                                             Binding="{Binding TechLeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:DataGridTextColumn Header="项目实施人员" Width="120"
+                                             Binding="{Binding Implementer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        <TextBlock Grid.Row="3" Text="{Binding NoticeText}" Foreground="#E8A33D" Margin="0,6,0,0" />
+    </Grid>
+</UserControl>

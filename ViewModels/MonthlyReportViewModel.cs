@@ -67,6 +67,9 @@ public class MonthlyReportViewModel : ObservableObject
     public ICommand ExportCommand { get; }
     public ICommand ClearCommand { get; }
 
+    /// <summary>节假日数据刷新完成后触发（视图借此重绘休息日行高亮）。</summary>
+    public event Action? CalendarRefreshed;
+
     public MonthlyReportViewModel(ProfileViewModel profile)
     {
         _profile = profile;
@@ -118,6 +121,7 @@ public class MonthlyReportViewModel : ObservableObject
             _suppressDirty = false;
         }
         RefreshSummary();
+        CalendarRefreshed?.Invoke();
     }
 
     private void ReloadMonth()

@@ -3,17 +3,63 @@
     x:Class="MonthlyReportGeneratorModern.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:MonthlyReportGeneratorModern"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Title="MonthlyReportGeneratorModern">
+    xmlns:vm="using:MonthlyReportGenerator.ViewModels"
+    xmlns:views="using:MonthlyReportGeneratorModern.Views"
+    Title="科烽智能AGV月报生成工具">
 
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid>
+    <!-- WinUI 3 Window 无 Resources，转换器放根 Grid -->
+    <Grid x:Name="RootGrid">
+        <Grid.Resources>
+            <vm:EqualsToVisibilityConverter x:Key="TabToVisibility" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <!-- 自绘标题栏（拖拽区，代码里 SetTitleBar） -->
+        <Grid x:Name="AppTitleBar" Grid.Row="0" Background="Transparent">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0" Spacing="8">
+                <Image Source="/Assets/app.png" Width="18" Height="18" />
+                <TextBlock Text="科烽智能AGV月报生成工具" VerticalAlignment="Center" FontSize="13" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 公共区：姓名/等级（三页共享，变更即持久化） -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="12,4,12,8" Spacing="6">
+            <TextBlock Text="姓名" VerticalAlignment="Center" />
+            <TextBox Width="110"
+                     Text="{Binding Profile.EmployeeName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="工程师等级" VerticalAlignment="Center" Margin="12,0,0,0" />
+            <ComboBox Width="130"
+                      ItemsSource="{Binding Profile.Levels}"
+                      SelectedItem="{Binding Profile.Level, Mode=TwoWay}" />
+        </StackPanel>
+
+        <!-- 标签（SelectorBar） -->
+        <SelectorBar x:Name="TabBar" Grid.Row="2" Margin="12,0,12,8" SelectionChanged="OnTabSelectionChanged">
+            <SelectorBarItem Text="月报" IsSelected="True" />
+            <SelectorBarItem Text="日报" />
+            <SelectorBarItem Text="周报" />
+        </SelectorBar>
+
+        <!-- 三个页面视图常驻（仅切换 Visibility，避免每次切换重建视觉树） -->
+        <Grid Grid.Row="3" Margin="12,0,12,12">
+            <views:MonthlyReportView
+                DataContext="{Binding MonthlyPage, ElementName=RootGrid}"
+                Visibility="{Binding SelectedTab, ElementName=RootGrid, Converter={StaticResource TabToVisibility}, ConverterParameter=0}" />
+            <views:DailyReportView
+                DataContext="{Binding DailyPage, ElementName=RootGrid}"
+                Visibility="{Binding SelectedTab, ElementName=RootGrid, Converter={StaticResource TabToVisibility}, ConverterParameter=1}" />
+            <views:WeeklyReportView
+                DataContext="{Binding WeeklyPage, ElementName=RootGrid}"
+                Visibility="{Binding SelectedTab, ElementName=RootGrid, Converter={StaticResource TabToVisibility}, ConverterParameter=2}" />
+        </Grid>
     </Grid>
 </Window>
