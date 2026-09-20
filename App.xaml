@@ -6,6 +6,45 @@
     xmlns:local="using:MonthlyReportGeneratorModern">
     <Application.Resources>
         <ResourceDictionary>
+            <!--
+              覆盖 CommunityToolkit DataGrid 默认（银灰旧样式）的选中/编辑高亮为现代 Fluent 配色：
+              行选中 = 主题蓝浅染（Win11 ListView 风格）、悬停 = 中性灰、
+              未聚焦选中 = 中性灰浅染、编辑焦点框 = 主题蓝。
+              键名来自包内主题资源（DataGridRowSelectedBackgroundColor 等，ThemeResource 机制，应用层可覆盖）。
+              详见 MIGRATION.md 坑 16。
+            -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="DataGridRowHoveredBackgroundColor">#F5F5F5</Color>
+                    <Color x:Key="DataGridRowSelectedBackgroundColor">#0F6CBD</Color>
+                    <x:Double x:Key="DataGridRowSelectedBackgroundOpacity">0.30</x:Double>
+                    <Color x:Key="DataGridRowSelectedHoveredBackgroundColor">#0F6CBD</Color>
+                    <x:Double x:Key="DataGridRowSelectedHoveredBackgroundOpacity">0.40</x:Double>
+                    <Color x:Key="DataGridRowSelectedUnfocusedBackgroundColor">#7A7A7A</Color>
+                    <x:Double x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity">0.30</x:Double>
+                    <Color x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundColor">#7A7A7A</Color>
+                    <x:Double x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity">0.40</x:Double>
+                    <Color x:Key="DataGridColumnHeaderHoveredBackgroundColor">#F0F0F0</Color>
+                    <Color x:Key="DataGridColumnHeaderPressedBackgroundColor">#E0E0E0</Color>
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="#0F6CBD" />
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="#FFFFFF" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="DataGridRowHoveredBackgroundColor">#3D3D3D</Color>
+                    <Color x:Key="DataGridRowSelectedBackgroundColor">#60CDFF</Color>
+                    <x:Double x:Key="DataGridRowSelectedBackgroundOpacity">0.30</x:Double>
+                    <Color x:Key="DataGridRowSelectedHoveredBackgroundColor">#60CDFF</Color>
+                    <x:Double x:Key="DataGridRowSelectedHoveredBackgroundOpacity">0.40</x:Double>
+                    <Color x:Key="DataGridRowSelectedUnfocusedBackgroundColor">#8A8A8A</Color>
+                    <x:Double x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity">0.30</x:Double>
+                    <Color x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundColor">#8A8A8A</Color>
+                    <x:Double x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity">0.40</x:Double>
+                    <Color x:Key="DataGridColumnHeaderHoveredBackgroundColor">#3A3A3A</Color>
+                    <Color x:Key="DataGridColumnHeaderPressedBackgroundColor">#2E2E2E</Color>
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="#60CDFF" />
+                    <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="#FF1F1F1F" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
