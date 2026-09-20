@@ -54,13 +54,16 @@
               无边框单元格模板（MIGRATION.md 坑18）：默认 DataGridCell 模板里的 FocusVisual 矩形
               以 BorderBrush 描边（默认黑）显示编辑焦点框，重写模板只保留 ContentPresenter，
               彻底移除编辑态黑色包边（行选中/休息日高亮在行级，不受影响）。
+              注意（坑19）：ContentPresenter 必须 HorizontalAlignment=Stretch（编辑框才撑满列宽、
+              随窗口缩放同步）且 Background=Transparent（空文本单元格才有命中区域，否则点击穿透、
+              无法进入编辑态）。
             -->
             <Style x:Key="BorderlessDataGridCellStyle" TargetType="dg:DataGridCell">
                 <Setter Property="BorderBrush" Value="Transparent" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Padding" Value="4,0" />
                 <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="dg:DataGridCell">
@@ -69,6 +72,7 @@
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
                                 ContentTransitions="{TemplateBinding ContentTransitions}"
                                 Margin="{TemplateBinding Padding}"
+                                Background="Transparent"
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                         </ControlTemplate>
