@@ -11,11 +11,7 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <!-- WinUI 3 Window 无 Resources，转换器放根 Grid -->
     <Grid x:Name="RootGrid">
-        <Grid.Resources>
-            <vm:EqualsToVisibilityConverter x:Key="TabToVisibility" />
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="Auto" />
@@ -49,17 +45,12 @@
             <SelectorBarItem Text="周报" />
         </SelectorBar>
 
-        <!-- 三个页面视图常驻（仅切换 Visibility，避免每次切换重建视觉树） -->
+        <!-- 三个页面视图常驻（仅切换 Visibility，避免每次切换重建视觉树；
+             DataContext/Visibility 由代码隐藏管理——WinUI 3 中 ElementName 绑定不可靠） -->
         <Grid Grid.Row="3" Margin="12,0,12,12">
-            <views:MonthlyReportView
-                DataContext="{Binding MonthlyPage, ElementName=RootGrid}"
-                Visibility="{Binding SelectedTab, ElementName=RootGrid, Converter={StaticResource TabToVisibility}, ConverterParameter=0}" />
-            <views:DailyReportView
-                DataContext="{Binding DailyPage, ElementName=RootGrid}"
-                Visibility="{Binding SelectedTab, ElementName=RootGrid, Converter={StaticResource TabToVisibility}, ConverterParameter=1}" />
-            <views:WeeklyReportView
-                DataContext="{Binding WeeklyPage, ElementName=RootGrid}"
-                Visibility="{Binding SelectedTab, ElementName=RootGrid, Converter={StaticResource TabToVisibility}, ConverterParameter=2}" />
+            <views:MonthlyReportView x:Name="MonthlyView" />
+            <views:DailyReportView x:Name="DailyView" Visibility="Collapsed" />
+            <views:WeeklyReportView x:Name="WeeklyView" Visibility="Collapsed" />
         </Grid>
     </Grid>
 </Window>

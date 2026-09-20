@@ -8,6 +8,8 @@
 
     <UserControl.Resources>
         <vm:ValueFormatConverter x:Key="Fmt" />
+        <!-- 时间下拉选项（静态资源：DataGrid 模板作用域内 ElementName 绑定不可靠） -->
+        <vm:TimeOptions x:Key="TimeOptions" />
     </UserControl.Resources>
 
     <Grid x:Name="Root" Loaded="OnLoaded" Unloaded="OnUnloaded">
@@ -76,11 +78,11 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <ComboBox Width="78" Tag="start:09" GotFocus="OnTimeComboFocus"
-                                          ItemsSource="{Binding DataContext.HourOptions, ElementName=Root}"
+                                          ItemsSource="{Binding Hours, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding StartHour, Mode=TwoWay}" />
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="4,0" />
                                 <ComboBox Width="78" Tag="start:09" GotFocus="OnTimeComboFocus"
-                                          ItemsSource="{Binding DataContext.MinuteOptions, ElementName=Root}"
+                                          ItemsSource="{Binding Minutes, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding StartMinute, Mode=TwoWay}" />
                                 <Button Content="×" Width="26" Height="26" Margin="4,0,0,0" Padding="0"
                                         FontSize="14" VerticalAlignment="Center"
@@ -94,11 +96,11 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <ComboBox Width="78" Tag="end:17" GotFocus="OnTimeComboFocus"
-                                          ItemsSource="{Binding DataContext.HourOptions, ElementName=Root}"
+                                          ItemsSource="{Binding Hours, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding EndHour, Mode=TwoWay}" />
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="4,0" />
                                 <ComboBox Width="78" Tag="end:17" GotFocus="OnTimeComboFocus"
-                                          ItemsSource="{Binding DataContext.MinuteOptions, ElementName=Root}"
+                                          ItemsSource="{Binding Minutes, Source={StaticResource TimeOptions}}"
                                           SelectedItem="{Binding EndMinute, Mode=TwoWay}" />
                                 <Button Content="×" Width="26" Height="26" Margin="4,0,0,0" Padding="0"
                                         FontSize="14" VerticalAlignment="Center"

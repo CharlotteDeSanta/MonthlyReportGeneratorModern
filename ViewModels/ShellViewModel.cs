@@ -1,7 +1,4 @@
-using System.Globalization;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Data;
 
 namespace MonthlyReportGenerator.ViewModels;
 
@@ -96,14 +93,4 @@ public class ShellViewModel : ObservableObject
         _weekly?.Shutdown();
         Profile.Save();
     }
-}
-
-/// <summary>标签页显隐转换器：SelectedTab == 参数 → Visible，否则 Collapsed。</summary>
-public class EqualsToVisibilityConverter : IValueConverter
-{
-    public object Convert(object value, Type targetType, object parameter, string language) =>
-        value?.ToString() == parameter?.ToString() ? Visibility.Visible : Visibility.Collapsed;
-
-    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
-        throw new NotSupportedException();
 }
