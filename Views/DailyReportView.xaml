@@ -49,7 +49,7 @@
             <controls:DataGrid.Columns>
                 <controls:DataGridTextColumn Header="日期" IsReadOnly="True" Width="110"
                                              Binding="{Binding Date, Mode=OneWay, Converter={StaticResource Fmt}, ConverterParameter=yyyy-MM-dd}" />
-                <controls:DataGridTextColumn Header="星期" IsReadOnly="True" Width="60"
+                <controls:DataGridTextColumn Header="星期" IsReadOnly="True" Width="80"
                                              Binding="{Binding WeekdayText, Mode=OneWay}" />
                 <controls:DataGridTemplateColumn Header="今日完成" Width="3*">
                     <controls:DataGridTemplateColumn.CellTemplate>
@@ -93,12 +93,43 @@
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellEditingTemplate>
                 </controls:DataGridTemplateColumn>
-                <controls:DataGridTextColumn Header="项目技术负责人" Width="120"
-                                             EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
-                                             Binding="{Binding TechLeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <controls:DataGridTextColumn Header="项目实施人员" Width="120"
-                                             EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
-                                             Binding="{Binding Implementer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <!-- 负责人/人员：模板列，编辑框与其他编辑列同款（圆角、无边框） -->
+                <controls:DataGridTemplateColumn Header="项目技术负责人" Width="120">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TechLeader, Mode=OneWay}"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       Margin="2,0" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding TechLeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     BorderThickness="0"
+                                     Background="Transparent" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Header="项目实施人员" Width="120">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Implementer, Mode=OneWay}"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       Margin="2,0" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                    <controls:DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Implementer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     BorderThickness="0"
+                                     Background="Transparent" />
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellEditingTemplate>
+                </controls:DataGridTemplateColumn>
             </controls:DataGrid.Columns>
         </controls:DataGrid>
 
