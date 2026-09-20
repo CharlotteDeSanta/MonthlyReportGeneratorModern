@@ -37,6 +37,7 @@
         <controls:DataGrid x:Name="MainGrid" Grid.Row="2"
                            ItemsSource="{Binding Days}"
                            AutoGenerateColumns="False"
+                           CellStyle="{StaticResource BorderlessDataGridCellStyle}"
                            CanUserSortColumns="False"
                            CanUserReorderColumns="False"
                            HeadersVisibility="Column"
@@ -65,6 +66,8 @@
                             <TextBox Text="{Binding DoneToday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
+                                     BorderThickness="0"
+                                     Background="Transparent"
                                      MinHeight="40" />
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellEditingTemplate>
@@ -84,13 +87,17 @@
                             <TextBox Text="{Binding PlanTomorrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
+                                     BorderThickness="0"
+                                     Background="Transparent"
                                      MinHeight="40" />
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellEditingTemplate>
                 </controls:DataGridTemplateColumn>
                 <controls:DataGridTextColumn Header="项目技术负责人" Width="120"
+                                             EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                              Binding="{Binding TechLeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <controls:DataGridTextColumn Header="项目实施人员" Width="120"
+                                             EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                              Binding="{Binding Implementer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:DataGrid.Columns>
         </controls:DataGrid>

@@ -3,6 +3,7 @@
     x:Class="MonthlyReportGeneratorModern.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dg="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:local="using:MonthlyReportGeneratorModern">
     <Application.Resources>
         <ResourceDictionary>
@@ -49,6 +50,38 @@
                     <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#60CDFF" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+            <!--
+              无边框单元格模板（MIGRATION.md 坑18）：默认 DataGridCell 模板里的 FocusVisual 矩形
+              以 BorderBrush 描边（默认黑）显示编辑焦点框，重写模板只保留 ContentPresenter，
+              彻底移除编辑态黑色包边（行选中/休息日高亮在行级，不受影响）。
+            -->
+            <Style x:Key="BorderlessDataGridCellStyle" TargetType="dg:DataGridCell">
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="4,0" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="dg:DataGridCell">
+                            <ContentPresenter
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- 编辑态文本框去边框（DataGridTextColumn 的 EditingElementStyle 使用） -->
+            <Style x:Key="BorderlessTextBoxStyle" TargetType="TextBox">
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->

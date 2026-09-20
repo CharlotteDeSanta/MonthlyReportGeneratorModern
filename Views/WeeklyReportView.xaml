@@ -49,6 +49,7 @@
                 <TextBlock Text="本周工作总结" FontWeight="Bold" Margin="0,0,0,4" />
                 <controls:DataGrid ItemsSource="{Binding ThisWeek}"
                                    AutoGenerateColumns="False"
+                                   CellStyle="{StaticResource BorderlessDataGridCellStyle}"
                                    CanUserSortColumns="False"
                                    CanUserReorderColumns="False"
                                    HeadersVisibility="Column"
@@ -61,6 +62,7 @@
                         <controls:DataGridTextColumn Header="星期" IsReadOnly="True" Width="100"
                                                      Binding="{Binding DateDisplay, Mode=OneWay}" />
                         <controls:DataGridTextColumn Header="类别" Width="90"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTemplateColumn Header="工作内容" Width="3*">
                             <controls:DataGridTemplateColumn.CellTemplate>
@@ -77,19 +79,26 @@
                                     <TextBox Text="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              AcceptsReturn="True"
                                              TextWrapping="Wrap"
+                                             BorderThickness="0"
+                                             Background="Transparent"
                                              MinHeight="40" />
                                 </DataTemplate>
                             </controls:DataGridTemplateColumn.CellEditingTemplate>
                         </controls:DataGridTemplateColumn>
                         <controls:DataGridTextColumn Header="阶段要点" Width="140"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding StagePoints, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="需要协调的内容" Width="140"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Coordination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="计划完成时间" Width="100"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding PlanFinishDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="进度状态" Width="80"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="备注" Width="110"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Remark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
@@ -97,6 +106,7 @@
                 <TextBlock Text="下周工作计划" FontWeight="Bold" Margin="0,12,0,4" />
                 <controls:DataGrid ItemsSource="{Binding NextWeek}"
                                    AutoGenerateColumns="False"
+                                   CellStyle="{StaticResource BorderlessDataGridCellStyle}"
                                    CanUserSortColumns="False"
                                    CanUserReorderColumns="False"
                                    HeadersVisibility="Column"
@@ -109,6 +119,7 @@
                         <controls:DataGridTextColumn Header="星期" IsReadOnly="True" Width="100"
                                                      Binding="{Binding DateDisplay, Mode=OneWay}" />
                         <controls:DataGridTextColumn Header="类别" Width="90"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTemplateColumn Header="工作内容" Width="3*">
                             <controls:DataGridTemplateColumn.CellTemplate>
@@ -125,19 +136,26 @@
                                     <TextBox Text="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              AcceptsReturn="True"
                                              TextWrapping="Wrap"
+                                             BorderThickness="0"
+                                             Background="Transparent"
                                              MinHeight="40" />
                                 </DataTemplate>
                             </controls:DataGridTemplateColumn.CellEditingTemplate>
                         </controls:DataGridTemplateColumn>
                         <controls:DataGridTextColumn Header="阶段要点" Width="140"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding StagePoints, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="需要协调的内容" Width="140"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Coordination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="计划完成时间" Width="100"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding PlanFinishDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="进度状态" Width="80"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <controls:DataGridTextColumn Header="备注" Width="110"
+                                                     EditingElementStyle="{StaticResource BorderlessTextBoxStyle}"
                                                      Binding="{Binding Remark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
