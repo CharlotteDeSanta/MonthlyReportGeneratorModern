@@ -32,13 +32,22 @@ namespace MonthlyReportGeneratorModern.Views
             }
         }
 
-        /// <summary>休息日行红底（周末/法定节假日且非补班日）。</summary>
+        /// <summary>
+        /// 休息日行红底（周末/法定节假日且非补班日）。
+        /// 注意：DataGrid 虚拟化会回收行容器，非休息日必须显式清除背景，
+        /// 否则红底会残留在无关日期上。
+        /// </summary>
         private void OnGridLoadingRow(object sender, DataGridRowEventArgs e)
         {
             if (e.Row.DataContext is DailyDayEntry { IsRestDay: true })
             {
                 e.Row.Background = RestRowBrush;
                 e.Row.BorderBrush = RestRowBorderBrush;
+            }
+            else
+            {
+                e.Row.Background = null;
+                e.Row.BorderBrush = null;
             }
         }
     }
