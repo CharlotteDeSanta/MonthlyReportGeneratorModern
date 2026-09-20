@@ -147,3 +147,13 @@
 7. 三个页面 View + 窗口壳重写（标签=SelectorBar，页面常驻+空闲预构建）；
 8. 低配机性能验证 + 全功能回归（对照 WPF 版逐条过 3.2–3.5）；
 9. 商店关联、素材、打包提交。
+
+## 12. 移植进度记录
+
+- **b1e489e 基础修正**：§2.1 TFM → net10.0-windows10.0.19041.0；§2.2 显示名"科烽智能AGV月报生成工具"、+internetClient、-systemAIModels；Release 编译通过；§2.4 提交基线。
+- **f73e107 里程碑2**：Models 10 文件直拷（命名空间保留 `MonthlyReportGenerator.Models`）；csproj 启用 `<ImplicitUsings>enable</ImplicitUsings>`（模板默认关闭，源项目开启，零修改直拷的前提）。
+- **里程碑3 导出管线**：拷贝 6 个 Service（ReportLayoutBuilder/DailyReportLayoutBuilder/WeeklyReportLayoutBuilder/LayoutUtil/XlsxExportService/ReportExporter）+ ClosedXML 0.105.1；新增 `Tests\ExportSmokeTest` 控制台回归（链接主项目 Models/Services 源码），黄金样本全部断言通过（六项汇总 6.0/6.00/52.68/12.68/1.58/1.0 + 无锡国药 6.0/12.68，回读 XLSX 校验数值与存储格式）。主 csproj 加 `<Compile Remove="Tests\**" />`。
+- **§2.3/§8.1 PublishTrimmed 验证**：ExportSmokeTest 以 PublishTrimmed+单文件自包含发布后运行全量回归通过 → **保留 PublishTrimmed=True**。
+- **坑 9（新增）**：ClosedXML 0.105.1 的 `GetString()` 对整数值丢尾零（如 6 + 格式 0.00 → "6"），但格式已正确写入文件、Excel 显示正常；回归测试改用"数值 + 存储格式"双重校验，勿用 GetString 校验数值列显示。
+- **环境坑 10（新增）**：本机 .NET 10.0.401 首次运行需在 `%USERPROFILE%\.dotnet` 写哨兵；且 ILLink 裁剪任务的 MSBuild 任务宿主依赖命名管道，在受限沙箱/CI 中会报 MSB4216——日常构建用 `-p:PublishTrimmed=false`，裁剪发布需完整权限执行。
+

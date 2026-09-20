@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ExportSmokeTest</RootNamespace>
+    <AssemblyName>ExportSmokeTest</AssemblyName>
+    <!-- §2.3 / §8.1：验证 ClosedXML 在裁剪发布下不崩溃 -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.1" />
+  </ItemGroup>
+
+  <!-- 链接主项目的 Models 与导出管线 Services（同一份源码，回归同一实现） -->
+  <ItemGroup>
+    <Compile Include="..\..\Models\**\*.cs" LinkBase="Models" />
+    <Compile Include="..\..\Services\LayoutUtil.cs" Link="Services\LayoutUtil.cs" />
+    <Compile Include="..\..\Services\ReportLayoutBuilder.cs" Link="Services\ReportLayoutBuilder.cs" />
+    <Compile Include="..\..\Services\DailyReportLayoutBuilder.cs" Link="Services\DailyReportLayoutBuilder.cs" />
+    <Compile Include="..\..\Services\WeeklyReportLayoutBuilder.cs" Link="Services\WeeklyReportLayoutBuilder.cs" />
+    <Compile Include="..\..\Services\XlsxExportService.cs" Link="Services\XlsxExportService.cs" />
+    <Compile Include="..\..\Services\ReportExporter.cs" Link="Services\ReportExporter.cs" />
+  </ItemGroup>
+
+</Project>
