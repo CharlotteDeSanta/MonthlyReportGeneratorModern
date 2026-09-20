@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MonthlyReportGeneratorModern (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "MonthlyReportGeneratorModern (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
